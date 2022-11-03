@@ -18,6 +18,7 @@ Calcul du trajet le plus court entre les villes.
 	- Obtenir la plus petite distance (array<entier>)
 	
 ## Structure programme
+####Récursivité:
 **Récursivité :**
 - Fonction faireTrajet(Trajet : tableau, numéro trajet : entier)
 	- Si Trajet[numéro trajet].Ville1 = faux et Trajet[numéro trajet].Ville2 = faux
