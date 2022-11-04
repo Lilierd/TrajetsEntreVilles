@@ -24,7 +24,7 @@ Calcul du trajet le plus court entre les villes.
 	- Liste de Trajets (à obtenir dans un fichier)
 	- Méthode Construire carte
 	
-![diagramme de classes](/ZBEUL/uml.mng)
+![diagramme de classes](/ZBEUL/uml.png)
 	
 ## Structure programme
 **Récursivité :**
