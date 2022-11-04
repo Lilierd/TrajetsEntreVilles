@@ -3,7 +3,8 @@ Calcul du trajet le plus court entre les villes.
 
 
 ## Orga
-
+**Thibaud** : Interface graphique
+**Christophe & Bastien** : développement de l’algorithme
 
 ## Liste des classes
 - **Trajet** :
@@ -22,6 +23,8 @@ Calcul du trajet le plus court entre les villes.
 - **Carte** :
 	- Liste de Trajets (à obtenir dans un fichier)
 	- Méthode Construire carte
+	
+![diagramme de classes](/ZBEUL/uml.mng)
 	
 ## Structure programme
 **Récursivité :**
