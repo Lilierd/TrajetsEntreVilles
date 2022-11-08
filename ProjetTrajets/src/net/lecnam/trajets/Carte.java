@@ -17,7 +17,11 @@ public class Carte {
 		Scanner s = new Scanner(myFile);
 		s.useDelimiter(" ");
 		while(s.hasNext()) {
-			
+			Ville ville1 = new Ville(s.next());
+			Ville ville2 = new Ville(s.next());
+			int distance = Integer.parseInt(s.next());
+			Trajet t = new Trajet(ville1, ville2, distance);
+			this.addTrajet(t);
 		}
 	}
 	
