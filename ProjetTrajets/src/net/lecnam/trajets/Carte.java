@@ -22,6 +22,8 @@ public class Carte {
 			int distance = Integer.parseInt(s.next());
 			Trajet t = new Trajet(ville1, ville2, distance);
 			this.addTrajet(t);
+			t = new Trajet(ville2, ville1, distance);
+			this.addTrajet(t);
 		}
 	}
 	
