@@ -28,10 +28,5 @@ Calcul du trajet le plus court entre les villes.
 ![diagramme de classes](/ZBEUL/uml.png)
 	
 ## Structure programme
-**Récursivité :**
-- Fonction faireTrajet(Trajet : tableau, numéro trajet : entier)
-	- Si Trajet[numéro trajet].Ville1 = faux et Trajet[numéro trajet].Ville2 = faux
-		- On fait le trajet
-	- Sinon
-		- Si numéro trajet inférieur à nombre de trajets
-			- faireTrajet(Trajet, numéro trajet + 1)
+	Dijkstra
+![Dijkstra](/ZBEUL/Dijkstra_Animation.gif)
