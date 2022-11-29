@@ -35,19 +35,43 @@ public class TrajetHandler {
 	public void setCarte(Carte carte) {
 		this.carte = carte;
 	}
-
-	public ArrayList<Trajet> getTrajetFinal(Ville villeDepart, Ville villeArrivee) {
-		Ville currentCity = villeDepart;
+	
+	private ArrayList<Trajet> getPossibleTrajets(Ville villeOrigine){
+		ArrayList<Trajet> trajetsPossibles = new ArrayList<Trajet>();
 		
-		while(currentCity.getNom() != villeArrivee.getNom()) {
-			Trajet t = this.getShorterRoute(currentCity);
-			trajetFinal.add(t);
-			if(currentCity.getNom() == t.getVille1().getNom())
-				currentCity = t.getVille2();
-			else
-				currentCity = t.getVille1();
+		for(Trajet t : this.carte.getTrajets()) {
+			if(t.getVille1().getNom() == villeOrigine.getNom() || t.getVille2().getNom() == villeOrigine.getNom())
+				trajetsPossibles.add(t);
 		}
 		
+		return trajetsPossibles;
+	}
+
+	public ArrayList<Trajet> getTrajetFinal(Ville villeDepart, Ville villeArrivee) {
+		villeDepart.setDistance(0);
+		Ville currentCity = villeDepart;
+		ArrayList<Trajet> trajetsPossibles;
+		
+		while(villeDepart.getNom() != villeArrivee.getNom()) {
+			trajetsPossibles = new ArrayList<Trajet>();
+			trajetsPossibles = getPossibleTrajets(currentCity);
+			
+			for(Trajet t : trajetsPossibles) {
+				if(t.getVille1().getNom() == currentCity.getNom()) {
+					if(t.getVille2().getDistance() + currentCity.getDistance()
+						> t.getLongueur() + currentCity.getDistance())
+						t.getVille2().setDistance(t.getLongueur() + currentCity.getDistance());
+				}
+				else if(t.getVille2().getNom() == currentCity.getNom()) {
+					if(t.getVille1().getDistance() + currentCity.getDistance()
+						> t.getLongueur() + currentCity.getDistance())
+						t.getVille1().setDistance(t.getLongueur() + currentCity.getDistance());
+				}
+				System.out.println("currentCity distance : "+currentCity.getDistance() + " - ville1 distance : "
+						+ t.getVille1().getDistance() + " - ville2 distance : " + t.getVille2().getDistance());
+				
+			}
+		}
 		return trajetFinal;
 	}
 }
