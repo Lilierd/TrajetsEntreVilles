@@ -1,6 +1,7 @@
 package net.lecnam.trajets;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class Main {
 	public static void main(String[] args) {
@@ -11,7 +12,14 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		TrajetHandler th = new TrajetHandler(c);
-		th.getTrajetFinal(c.getTrajets().get(1).getVille1(), c.getTrajets().get(5).getVille1());
+		th.dijkstra("Paris");
+		//boolean bellman = th.bellman_ford("Paris");
+		//System.out.println("\nReussi : "+bellman);
+		ArrayList<Ville> fin = th.recupererChemin("Paris", "Marseille");
+		th.afficherChemin("Paris", "Marseille", fin);
 	}
 }
+
+

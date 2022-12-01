@@ -2,76 +2,130 @@ package net.lecnam.trajets;
 
 import java.util.ArrayList;
 
+/**
+ * Classe permettant de réaliser les algorithmes de plus court chemin
+ * Elle possède un attribut :
+ * - carte : la carte sur laquelle on va effectuer les calculs
+ */
 public class TrajetHandler {
 	Carte carte;
-	ArrayList<Trajet> trajetFinal;
 	
+    /**
+     * Constructeur de la classe TrajetHandler
+     * @param map : carte sur laquelle vont de faire les calculs
+     */
 	public TrajetHandler(Carte map) {
 		this.carte = map;
 	}
-	
-	private Trajet getShorterRoute(Ville villeDepart) {
-		ArrayList<Trajet> trajets = new ArrayList<Trajet>();
-		for(Trajet t : this.carte.getTrajets()) {
-			if(t.getVille1().getNom() == villeDepart.getNom()
-					|| t.getVille2().getNom() == villeDepart.getNom())
-				trajets.add(t);
-		}
-		Trajet shorterTrajet = this.carte.getTrajets().get(0);
-		int dist = shorterTrajet.getLongueur();
-		for(Trajet t : trajets) {
-			if(dist > t.getLongueur()) {
-				dist = t.getLongueur();
-				shorterTrajet = t;
+
+    /**
+	 * Algorithme de Dijkstra permettant de calculer les plus courts chemins jusqu'à chaque ville
+	 * à partir de la ville de départ
+	 * @param nomVille : ville de départ
+	 */
+	public void dijkstra(String nomVille){
+		//On récupère la ville de départ à partir de son son nom puis on met sa distance à 0
+		Ville depart = this.carte.getVilleByName(nomVille);
+		depart.setDistance(0);
+        ArrayList<Ville> villes = this.carte.getVilles();
+		for(int i = 0; i < this.carte.getNbVilles()-1; i++){
+
+			//On recupère la 1ère ville non visitée dans le tableau des villes et on la passe à visitée
+			Ville v = this.carte.min();
+			v.setVisitee(true);
+
+			//On recupère les trajets dont le départ est la ville obtenue précédemment
+			ArrayList<Trajet> trajetsFromVille = this.carte.getTrajetFromVille(v.getNom());
+
+			/*
+			 * Pour chaque trajet, on vérifie si la distance sur la ville d'arrivée 
+			 * est supérieure à la distance sur la ville de départ + la longueur du trajet.
+			 * Si c'est le cas, on n'a trouvé un trajet plus court que celui existant :
+			 * on met donc à jour a distance de la ville d'arrivée et on lui affecte en père la ville
+			 */
+
+			for(int j = 0; j < trajetsFromVille.size(); j++){
+				int indexV = this.carte.getIndexOfVille(trajetsFromVille.get(j).getVille2().getNom());
+				if(villes.get(indexV).estVisitee() == false && villes.get(indexV).getDistance() > v.getDistance() + trajetsFromVille.get(j).getLongueur()){
+					villes.get(indexV).setDistance(v.getDistance() + trajetsFromVille.get(j).getLongueur());
+					villes.get(indexV).setPere(v);
+				}
 			}
 		}
-		return shorterTrajet;
-	}
-	
-	public Carte getCarte() {
-		return carte;
-	}
-	
-	public void setCarte(Carte carte) {
-		this.carte = carte;
-	}
-	
-	private ArrayList<Trajet> getPossibleTrajets(Ville villeOrigine){
-		ArrayList<Trajet> trajetsPossibles = new ArrayList<Trajet>();
-		
-		for(Trajet t : this.carte.getTrajets()) {
-			if(t.getVille1().getNom() == villeOrigine.getNom() || t.getVille2().getNom() == villeOrigine.getNom())
-				trajetsPossibles.add(t);
-		}
-		
-		return trajetsPossibles;
 	}
 
-	public ArrayList<Trajet> getTrajetFinal(Ville villeDepart, Ville villeArrivee) {
-		villeDepart.setDistance(0);
-		Ville currentCity = villeDepart;
-		ArrayList<Trajet> trajetsPossibles;
-		
-		while(villeDepart.getNom() != villeArrivee.getNom()) {
-			trajetsPossibles = new ArrayList<Trajet>();
-			trajetsPossibles = getPossibleTrajets(currentCity);
-			
-			for(Trajet t : trajetsPossibles) {
-				if(t.getVille1().getNom() == currentCity.getNom()) {
-					if(t.getVille2().getDistance() + currentCity.getDistance()
-						> t.getLongueur() + currentCity.getDistance())
-						t.getVille2().setDistance(t.getLongueur() + currentCity.getDistance());
+	/**
+	 * Algorithme de Bellman-Ford permettant de calculer les plus courts chemins jusqu'à chaque ville
+	 * à partir de la ville de départ
+	 * @param nomVille : ville de départ
+	 * @return boolean : Algo réussi
+	 */
+	public boolean bellman_ford(String nomVille){
+		//On récupère la ville de départ à partir de son son nom puis on met sa distance à 0
+		Ville v = this.carte.getVilleByName(nomVille);
+		v.setDistance(0);
+
+		/**
+		 * Pour chaque ville, on parcourt l'ensemble des trajets de la carte
+		 * et on vérifie si la distance sur la ville d'arrivée 
+		 * est supérieure à la distance sur la ville de départ + la longueur du trajet.
+		 * Si c'est le cas, on n'a trouvé un trajet plus court que celui existant :
+		 * on met donc à jour a distance de la ville d'arrivée et on lui affecte en père la ville
+		 */
+		for(int i = 0; i < this.carte.getNbVilles()-1; i++){
+			for(int j = 0; j < this.carte.getNbTrajets(); j++){
+				Trajet t = this.carte.getTrajets().get(j);
+				Ville v1 = this.carte.getVilleByName(t.getVille1().getNom());
+				Ville v2 = this.carte.getVilleByName(t.getVille2().getNom());
+				if(v2.getDistance() > v1.getDistance() + t.getLongueur()){
+					v2.setDistance(v1.getDistance() + t.getLongueur());
+					v2.setPere(v1);
 				}
-				else if(t.getVille2().getNom() == currentCity.getNom()) {
-					if(t.getVille1().getDistance() + currentCity.getDistance()
-						> t.getLongueur() + currentCity.getDistance())
-						t.getVille1().setDistance(t.getLongueur() + currentCity.getDistance());
-				}
-				System.out.println("currentCity distance : "+currentCity.getDistance() + " - ville1 distance : "
-						+ t.getVille1().getDistance() + " - ville2 distance : " + t.getVille2().getDistance());
-				
 			}
 		}
-		return trajetFinal;
+		/**
+		 * Cette boucle permet de vérifier si l'algorithme est bien réussi.
+		 * Bellman-Ford ne réussit pas dans 100% des cas.
+		 */
+		for(int i = 0; i < this.carte.getNbTrajets(); i++){
+			Trajet t = this.carte.getTrajets().get(i);
+			if(t.getVille2().getDistance() > t.getVille1().getDistance() + t.getLongueur()){
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Méthode permettant de récupérer le chemin entre la ville de départ et la ville d'arrivée
+	 * @param ville1 : ville de départ
+	 * @param ville2 : ville d'arrivée
+	 * @return fin : ArrayList<Ville>
+	 */
+	public ArrayList<Ville> recupererChemin(String ville1, String ville2){
+		ArrayList<Ville> fin = new ArrayList<Ville>();
+		Ville v = this.carte.getVilleByName(ville2);
+		fin.add(v);
+		while(v.getPere() != null){
+			v = this.carte.getVilleByName(v.getPere().getNom());
+			fin.add(v);
+		}
+		return fin;
+	}
+
+	/**
+	 * Méthode permettant d'afficher le chemin entre 2 villes
+	 * @param ville1 : ville de départ
+	 * @param ville2 : ville d'arrivée
+	 * @param fin
+	 */
+	public void afficherChemin(String ville1, String ville2, ArrayList<Ville> fin){
+		System.out.println("Trajet de "+ville1+" à "+ville2+" : "+fin.get(0).getDistance()+" km");
+		for(int i = fin.size()-1; i>=0; i--){
+			System.out.print(fin.get(i).getNom()+ " ");
+			if(i!=0){
+				System.out.print("-> ");
+			}
+		}
 	}
 }
