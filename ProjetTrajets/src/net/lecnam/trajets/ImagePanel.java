@@ -11,15 +11,32 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 
 public class ImagePanel extends JFrame{
 
     JPanel panel = new JPanel();
+<<<<<<< Updated upstream
+=======
+    
+    //Bouton de lancement du calcul du chemin
+    JButton bouton = new JButton("Calculer");
+    
+    //Gestion du trajet
+    TrajetHandler th = new TrajetHandler("carte.txt");
+    
+    //Liste des lignes rouges indiquant le trajet à suivre (à afficher selon ce même trajet)
+    ArrayList<Ligne> trajetsLigne = new ArrayList<Ligne>();
+    
+    //Texte d'affichage du résultat du calcul
+    JTextArea texte = new JTextArea("");
+    //Tableau des checkbox correspondants aux villes
+>>>>>>> Stashed changes
     CheckBoite[] b = new CheckBoite[18];
     {
     b[1] = new CheckBoite("Rouen"); //Rouen
@@ -47,11 +64,21 @@ public class ImagePanel extends JFrame{
         {
         	this.getContentPane().setBackground(Color.WHITE);
             panel.setBounds(50, 50, 550, 550);
+<<<<<<< Updated upstream
 
             BufferedImage img = ImageIO.read(new File("carteprojet.png"));
             JLabel pic = new JLabel(new ImageIcon(img));
             panel.add(pic);
 
+=======
+            texte.setBounds(100, 525, 400, 100);
+            texte.
+            //texte.setText("yolodsgysgdfyuqshrfugyfusdhufhyqusdjfihqushdguhqiusdhjfuyuqhdfbhygsdfughuqsndjbgfuyqhgurhfgjkqsbdfuyigqeuzgbujkqhsueighusdbnfujhus");
+            BufferedImage img = ImageIO.read(new File("carteprojet.png"));
+            JLabel pic = new JLabel(new ImageIcon(img));
+            panel.add(pic);
+            add(texte);
+>>>>>>> Stashed changes
             b[1].setBounds(224,181,15,15);
             add(b[1]);
 
@@ -109,6 +136,7 @@ public class ImagePanel extends JFrame{
             }
             add(panel);
             setSize(665, 680);
+            setResizable(false);
             setLayout(null);
             setVisible(true);
         }
