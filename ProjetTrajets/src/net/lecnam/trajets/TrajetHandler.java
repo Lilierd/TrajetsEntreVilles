@@ -54,8 +54,8 @@ public class TrajetHandler {
 			/*
 			 * Pour chaque trajet, on vérifie si la distance sur la ville d'arrivée 
 			 * est supérieure à la distance sur la ville de départ + la longueur du trajet.
-			 * Si c'est le cas, on n'a trouvé un trajet plus court que celui existant :
-			 * on met donc à jour a distance de la ville d'arrivée et on lui affecte en père la ville
+			 * Si c'est le cas, on a trouvé un trajet plus court que celui existant :
+			 * on met donc à jour la distance de la ville d'arrivée et on lui affecte en père la ville
 			 */
 
 			for(int j = 0; j < trajetsFromVille.size(); j++){
@@ -84,7 +84,7 @@ public class TrajetHandler {
 		 * et on vérifie si la distance sur la ville d'arrivée 
 		 * est supérieure à la distance sur la ville de départ + la longueur du trajet.
 		 * Si c'est le cas, on n'a trouvé un trajet plus court que celui existant :
-		 * on met donc à jour a distance de la ville d'arrivée et on lui affecte en père la ville
+		 * on met donc à jour la distance de la ville d'arrivée et on lui affecte en père la ville
 		 */
 		for(int i = 0; i < this.carte.getNbVilles()-1; i++){
 			for(int j = 0; j < this.carte.getNbTrajets(); j++){
@@ -98,8 +98,7 @@ public class TrajetHandler {
 			}
 		}
 		/**
-		 * Cette boucle permet de vérifier si l'algorithme est bien réussi.
-		 * Bellman-Ford ne réussit pas dans 100% des cas.
+		 * Cette boucle permet de vérifier la présence d'un circuit de poids négatif.
 		 */
 		for(int i = 0; i < this.carte.getNbTrajets(); i++){
 			Trajet t = this.carte.getTrajets().get(i);
