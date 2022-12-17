@@ -83,7 +83,7 @@ public class TrajetHandler {
 		 * Pour chaque ville, on parcourt l'ensemble des trajets de la carte
 		 * et on vérifie si la distance sur la ville d'arrivée 
 		 * est supérieure à la distance sur la ville de départ + la longueur du trajet.
-		 * Si c'est le cas, on n'a trouvé un trajet plus court que celui existant :
+		 * Si c'est le cas, on a trouvé un trajet plus court que celui existant :
 		 * on met donc à jour la distance de la ville d'arrivée et on lui affecte en père la ville
 		 */
 		for(int i = 0; i < this.carte.getNbVilles()-1; i++){
