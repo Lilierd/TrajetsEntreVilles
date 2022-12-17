@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -18,8 +19,18 @@ import javax.swing.JPanel;
 
 
 public class ImagePanel extends JFrame{
-
+	//Conteneur des éléments à afficher
     JPanel panel = new JPanel();
+    
+    //Gestion du trajet
+    TrajetHandler th = new TrajetHandler("carte.txt");
+    
+    //Liste des lignes rouges indiquant le trajet à suivre (à afficher selon ce même trajet)
+    ArrayList<Ligne> trajetsLigne = new ArrayList<Ligne>();
+    
+    //Texte d'affichage du résultat du calcul
+    JLabel texte = new JLabel("");
+    //Tableau des checkbox correspondants aux villes
     CheckBoite[] b = new CheckBoite[18];
     {
     b[1] = new CheckBoite("Rouen"); //Rouen
@@ -40,6 +51,7 @@ public class ImagePanel extends JFrame{
     b[16] = new CheckBoite("Marseille"); //Marseille
     b[17] = new CheckBoite("Nice"); //Nice
     }
+    
     public ImagePanel()
     {
     	this.setTitle("Carte");
@@ -47,11 +59,12 @@ public class ImagePanel extends JFrame{
         {
         	this.getContentPane().setBackground(Color.WHITE);
             panel.setBounds(50, 50, 550, 550);
-
+            texte.setBounds(150, 300, 300, 100);
+            texte.setText("yolo");
             BufferedImage img = ImageIO.read(new File("carteprojet.png"));
             JLabel pic = new JLabel(new ImageIcon(img));
             panel.add(pic);
-
+            panel.add(texte);
             b[1].setBounds(224,181,15,15);
             add(b[1]);
 
@@ -103,10 +116,6 @@ public class ImagePanel extends JFrame{
             b[17].setBounds(420,439,15,15);
             add(b[17]);
             
-            for(int i = 1; i < 18; i++) 
-            {
-            	
-            }
             add(panel);
             setSize(665, 680);
             setLayout(null);
@@ -125,40 +134,62 @@ public class ImagePanel extends JFrame{
         g.setColor(Color.RED);
         ((Graphics2D) g).setStroke(new BasicStroke(2));
         
-        ArrayList<Ligne> tableau = new ArrayList<Ligne>();
-
-        tableau.add (new Ligne(430, 480, 385, 484, "Marseille", "Nice")); //Nice Marseille
-        tableau.add (new Ligne(250,211,307,179, "Rouen", "Lille")); //Rouen Lille
-        tableau.add (new Ligne(318,187,298,244, "Lille", "Paris")); //Lille Paris
-        tableau.add (new Ligne(250,229,287,249, "Rouen", "Paris")); //Rouen Paris
-        tableau.add (new Ligne(213,283,287,257, "Rennes", "Paris")); //Rennes Paris
-        tableau.add (new Ligne(202,300,202,330, "Rennes", "Nantes")); //Rennes Nantes
-        tableau.add (new Ligne(204,280,236,229, "Rennes", "Rouen")); //Rennes Rouen
-        tableau.add (new Ligne(192,292,140,282, "Rennes", "Brest")); //Rennes Brest
-        tableau.add (new Ligne(244,387,208,350, "Limoges", "Nantes")); //Limoges Nantes
-        tableau.add (new Ligne(210,418,202,350, "Bordeaux", "Nantes")); //Bordeaux Nantes
-        tableau.add (new Ligne(220,418,244,402, "Bordeaux", "Limoges")); //Bordeaux Limoges
-        tableau.add (new Ligne(220,437,257,465, "Bordeaux", "Toulouse")); //Bordeaux Toulouse
-        tableau.add (new Ligne(306,385,298,264, "Clermont", "Paris")); //Clermont Paris
-        tableau.add (new Ligne(318,395,367,398, "Clermont", "Lyon")); //Clermont Lyon
-        tableau.add (new Ligne(298,397,267,396, "Clermont", "Limoges")); //Clermont Limoges
-        tableau.add (new Ligne(373,320,301,261, "Dijon", "Paris")); //Dijon Paris
-        tableau.add (new Ligne(390,322,443,293, "Dijon", "Strasbourg")); //Dijon Strasbourg
-        tableau.add (new Ligne(379,345,378,387, "Dijon", "Lyon")); //Dijon Lyon
-        tableau.add (new Ligne(393,422,382,409, "Grenoble", "Lyon")); //Grenoble Lyon
-        tableau.add (new Ligne(378, 472,376,409, "Marseille", "Lyon")); //Marseille Lyon
-        tableau.add (new Ligne(324, 464,370,409, "Montpellier", "Lyon")); //Montpellier Lyon
-        tableau.add (new Ligne(315, 463,307,406, "Montpellier", "Clermont")); //Montpellier Clermont
-        tableau.add (new Ligne(307, 474,277,470, "Montpellier", "Toulouse")); //Montpellier Toulouse
-
-        
-        for(Ligne lin : tableau) {
-        	for(int i = 1; i < 18; i++) {
-        		if(/*Si les villes de lin correspondent aux villes du trajet*/true )
-        			g2.draw(lin);
-        	}
-        }
-        	
+        trajetsLigne.add (new Ligne(430, 480, 385, 484, "Marseille", "Nice")); //Nice Marseille
+        trajetsLigne.add (new Ligne(250,211,307,179, "Rouen", "Lille")); //Rouen Lille
+        trajetsLigne.add (new Ligne(318,187,298,244, "Lille", "Paris")); //Lille Paris
+        trajetsLigne.add (new Ligne(250,229,287,249, "Rouen", "Paris")); //Rouen Paris
+        trajetsLigne.add (new Ligne(213,283,287,257, "Rennes", "Paris")); //Rennes Paris
+        trajetsLigne.add (new Ligne(202,300,202,330, "Rennes", "Nantes")); //Rennes Nantes
+        trajetsLigne.add (new Ligne(204,280,236,229, "Rennes", "Rouen")); //Rennes Rouen
+        trajetsLigne.add (new Ligne(192,292,140,282, "Rennes", "Brest")); //Rennes Brest
+        trajetsLigne.add (new Ligne(244,387,208,350, "Limoges", "Nantes")); //Limoges Nantes
+        trajetsLigne.add (new Ligne(210,418,202,350, "Bordeaux", "Nantes")); //Bordeaux Nantes
+        trajetsLigne.add (new Ligne(220,418,244,402, "Bordeaux", "Limoges")); //Bordeaux Limoges
+        trajetsLigne.add (new Ligne(220,437,257,465, "Bordeaux", "Toulouse")); //Bordeaux Toulouse
+        trajetsLigne.add (new Ligne(306,385,298,264, "Clermont", "Paris")); //Clermont Paris
+        trajetsLigne.add (new Ligne(318,395,367,398, "Clermont", "Lyon")); //Clermont Lyon
+        trajetsLigne.add (new Ligne(298,397,267,396, "Clermont", "Limoges")); //Clermont Limoges
+        trajetsLigne.add (new Ligne(373,320,301,261, "Dijon", "Paris")); //Dijon Paris
+        trajetsLigne.add (new Ligne(390,322,443,293, "Dijon", "Strasbourg")); //Dijon Strasbourg
+        trajetsLigne.add (new Ligne(379,345,378,387, "Dijon", "Lyon")); //Dijon Lyon
+        trajetsLigne.add (new Ligne(393,422,382,409, "Grenoble", "Lyon")); //Grenoble Lyon
+        trajetsLigne.add (new Ligne(378, 472,376,409, "Marseille", "Lyon")); //Marseille Lyon
+        trajetsLigne.add (new Ligne(324, 464,370,409, "Montpellier", "Lyon")); //Montpellier Lyon
+        trajetsLigne.add (new Ligne(315, 463,307,406, "Montpellier", "Clermont")); //Montpellier Clermont
+        trajetsLigne.add (new Ligne(307, 474,277,470, "Montpellier", "Toulouse")); //Montpellier Toulouse
+    }
+    
+    private void drawTrajet(Graphics2D g, ArrayList<Ligne> lignes) {
+    	int nbSelected = 0;
+    	String ville1 = new String();
+    	String ville2 = new String();
+    	for(int i = 1; i < 18; i++) {
+    		if(b[i].isSelected()) {
+    			nbSelected++;
+    			if(nbSelected == 1)
+    				ville1 = b[i].getVille();
+    			if(nbSelected == 2)
+    				ville2 = b[i].getVille();
+    		}
+    	}
+    	if(nbSelected != 2) {
+    		System.err.println("Erreur : trajet non valide. Veuillez ne cocher que deux cases.");
+    		this.texte.setText("Erreur : trajet non valide. Veuillez ne cocher que deux cases.");
+    		return;
+    	}
+    	
+    	th.dijkstra(ville1);
+		//boolean bellman = th.bellman_ford("Paris");
+		//System.out.println("\nReussi : "+bellman);
+		ArrayList<Ville> villesTrajet = th.recupererChemin(ville1, ville2);
+		texte.setText(th.afficherChemin(ville1, ville2, villesTrajet));
+    	
+		for(Ligne lin : trajetsLigne) {
+			for(int i = 0; i < villesTrajet.size(); i++) {
+				if(villesTrajet.get(i).getNom() == lin.getNomVille1() && villesTrajet.get(i+1).getNom() == lin.getNomVille2())
+					g.draw(lin);
+			}
+		}
     }
     
     public static void main(String args[])

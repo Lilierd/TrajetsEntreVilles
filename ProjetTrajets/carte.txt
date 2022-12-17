@@ -15,7 +15,7 @@ Bordeaux Limoges 222
 Bordeaux Toulouse 244 
 Limoges Clermont 174 
 Clermont Lyon 207 
-Clermont Montepllier 334 
+Clermont Montpellier 334 
 Lyon Montpellier 304 
 Lyon Marseille 316 
 Lyon Grenoble 112 
