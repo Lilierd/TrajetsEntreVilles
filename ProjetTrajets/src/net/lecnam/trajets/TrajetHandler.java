@@ -1,5 +1,6 @@
 package net.lecnam.trajets;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 /**
@@ -8,14 +9,27 @@ import java.util.ArrayList;
  * - carte : la carte sur laquelle on va effectuer les calculs
  */
 public class TrajetHandler {
-	Carte carte;
+	Carte carte = new Carte();
 	
     /**
      * Constructeur de la classe TrajetHandler
-     * @param map : carte sur laquelle vont de faire les calculs
+     * @param map : carte sur laquelle vont se faire les calculs
      */
 	public TrajetHandler(Carte map) {
 		this.carte = map;
+	}
+	
+	/**
+     * Second constructeur de la classe TrajetHandler
+     * @param file : fichier texte de la carte sur laquelle vont se faire les calculs
+     */
+	public TrajetHandler(String file) {
+		try {
+			this.carte.construireCarte(file);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
     /**
@@ -119,13 +133,16 @@ public class TrajetHandler {
 	 * @param ville2 : ville d'arrivée
 	 * @param fin
 	 */
-	public void afficherChemin(String ville1, String ville2, ArrayList<Ville> fin){
-		System.out.println("Trajet de "+ville1+" à "+ville2+" : "+fin.get(0).getDistance()+" km");
+	public String afficherChemin(String ville1, String ville2, ArrayList<Ville> fin){
+		String str = new String();
+		str = ("Trajet de "+ville1+" à "+ville2+" : "+fin.get(0).getDistance()+" km");
 		for(int i = fin.size()-1; i>=0; i--){
-			System.out.print(fin.get(i).getNom()+ " ");
+			str += (fin.get(i).getNom()+ " ");
 			if(i!=0){
-				System.out.print("-> ");
+				str += ("-> ");
 			}
 		}
+		
+		return str;
 	}
 }
