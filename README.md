@@ -3,9 +3,9 @@ Calcul du trajet le plus court entre les villes.
 
 
 ## Orga
-**Thibaud** : Interface graphique
+**Thibaud & Bastien** : Interface graphique
 
-**Christophe & Bastien** : développement de l’algorithme
+**Christophe** : développement de l’algorithme
 
 ## Liste des classes
 - **Trajet** :
